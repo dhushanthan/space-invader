@@ -2,16 +2,29 @@ import turtle
 import winsound
 import math
 import random
+import sys
+import os
+
+# https://stackoverflow.com/questions/31836104/pyinstaller-and-onefile-how-to-include-an-image-in-the-exe-file
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS2
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 # Set up the scree
 wn = turtle.Screen()
 wn.bgcolor("black")
 wn.title("Space Invaders")
-wn.bgpic("img/background.gif")
+wn.bgpic(resource_path("img\\background.gif"))
 
 #Register the shapes
-turtle.register_shape("img/invader.gif")
-turtle.register_shape("img/player.gif")
+turtle.register_shape(resource_path("img\\invader.gif"))
+turtle.register_shape(resource_path("img\\player.gif"))
 
 # Draw border
 border_pen = turtle.Turtle()
@@ -42,7 +55,7 @@ score_pen.hideturtle()
 # Create the player turtle
 player = turtle.Turtle()
 player.color("blue")
-player.shape("img/player.gif")
+player.shape(resource_path("img\\player.gif"))
 player.penup()
 player.speed(0)
 player.setposition(0, -250)
@@ -62,7 +75,7 @@ for i in range(number_of_enemies):
 
 for enemy in enemies:
     enemy.color("red")
-    enemy.shape("img/invader.gif")
+    enemy.shape(resource_path("img\\invader.gif"))
     enemy.penup()
     enemy.speed(0)
     x = random.randint(-200, 200)
@@ -110,7 +123,7 @@ def fire_bullet():
     # Declare bulletstate as global if it needs changed
     global bulletstate
     if bulletstate == "ready":
-        winsound.PlaySound("sounds/laser.wav", winsound.SND_ASYNC)
+        winsound.PlaySound(resource_path("sounds\\laser.wav"), winsound.SND_ASYNC)
         bulletstate = "fire"
         # Move the bullet to just above the player
         x = player.xcor()
